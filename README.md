@@ -203,13 +203,7 @@ http://127.0.0.1:5000
 
 This project was developed as part of a cybersecurity academic project to demonstrate practical application of AI in phishing detection.
 
----
 
-## Author
-
-**Devansh Baluni**  
-Cybersecurity Student  
-Interested in AI Security, Threat Detection, and Blue Team Operations  
 
 ---
 
