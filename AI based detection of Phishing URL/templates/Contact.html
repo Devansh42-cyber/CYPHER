@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<head>
+  <title>Contact & Credits - AI Phishing Detection</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #0d1117;
+      color: #e6edf3;
+      line-height: 1.6;
+    }
+
+    header {
+      background: #161b22;
+      padding: 20px;
+      text-align: center;
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #00ffcc;
+      text-shadow: 0 0 10px #00ffcc;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+
+    h2 {
+      color: #00ffcc;
+      text-align: center;
+      margin-bottom: 20px;
+      text-shadow: 0 0 8px #00cc99;
+    }
+
+    .team {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 40px;
+    }
+
+    .member {
+      background: #161b22;
+      border-radius: 10px;
+      padding: 20px;
+      margin: 10px;
+      width: 220px;
+      text-align: center;
+      color: #e6edf3;
+      box-shadow: 0 0 10px rgba(0, 255, 204, 0.3);
+      transition: transform 0.2s ease;
+    }
+
+    .member:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 15px rgba(0, 255, 204, 0.7);
+    }
+
+    .member h3 {
+      margin: 10px 0;
+      color: #00ffcc;
+    }
+
+    .member p {
+      font-size: 0.9rem;
+      color: #aaa;
+    }
+
+    .contact {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .contact a {
+      color: #00ffcc;
+      text-decoration: none;
+      font-weight: bold;
+      transition: 0.2s;
+    }
+
+    .contact a:hover {
+      color: #00cc99;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 50px;
+      padding: 15px;
+      font-size: 0.9rem;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+
+  <header>Contact & Credits</header>
+
+  <div class="container">
+    <h2>Our Team</h2>
+    <div class="team">
+      <div class="member">
+        <h3>Pratham Joshi</h3>
+        <p>Project Manager</p>
+      </div>
+      <div class="member">
+        <h3>Niharika</h3>
+        <p>Data Acquisition</p>
+      </div>
+      <div class="member">
+        <h3>Aditi Rawat</h3>
+        <p>Software Developer</p>
+      </div>
+      <div class="member">
+        <h3>Vaibhav Mishra</h3>
+        <p>Testing</p>
+      </div>
+      <div class="member">
+        <h3>Devansh Baluni</h3>
+        <p>Frontend & Backend Developer</p>
+      </div>
+    </div>
+
+    <h2>Contact Us</h2>
+    <div class="contact">
+      <p>GitHub: <a href="https://github.com" target="_blank">Project Repository</a></p>
+    </div>
+  </div>
+
+  <footer>
+    <p>Back to <a href="{{ url_for('index') }}">Home</a> | <a href="{{ url_for('about') }}">About</a></p>
+  </footer>
+
+</body>
+</html>

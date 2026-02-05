@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<head>
+  <title>About - AI Phishing Detection</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #0d1117;
+      color: #e6edf3;
+      line-height: 1.6;
+    }
+
+    header {
+      background: #161b22;
+      padding: 20px;
+      text-align: center;
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #00ffcc;
+      text-shadow: 0 0 10px #00ffcc;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+
+    h2 {
+      color: #00ffcc;
+      text-align: center;
+      margin-bottom: 20px;
+      text-shadow: 0 0 8px #00cc99;
+    }
+
+    p {
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+    }
+
+    .tools {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 30px;
+    }
+
+    .tool {
+      background: #161b22;
+      border-radius: 8px;
+      padding: 15px 25px;
+      margin: 10px;
+      font-weight: bold;
+      color: #00ffcc;
+      box-shadow: 0 0 10px rgba(0, 255, 204, 0.3);
+      transition: transform 0.2s ease;
+    }
+
+    .tool:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 15px rgba(0, 255, 204, 0.7);
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 50px;
+      padding: 15px;
+      font-size: 0.9rem;
+      color: #aaa;
+    }
+
+    a {
+      color: #00ffcc;
+      text-decoration: none;
+      transition: 0.2s;
+    }
+
+    a:hover {
+      color: #00cc99;
+    }
+  </style>
+</head>
+<body>
+
+  <header>About Our Project</header>
+
+  <div class="container">
+    <h2>AI-Powered Phishing Detection</h2>
+    <p>
+      This project focuses on building an <strong>AI-powered phishing link detection system</strong>. 
+      Our goal is to identify malicious and suspicious domains using machine learning models 
+      and provide an easy-to-use dashboard for monitoring threats.
+    </p>
+    <p>
+      The system analyzes URLs and classifies them as <span style="color: #00ffcc;">Safe</span>, 
+      <span style="color: orange;">Suspicious</span>, or <span style="color: red;">Malicious</span>. 
+      The website you are viewing serves as the <strong>frontend interface</strong>, allowing users 
+      to check links, view real-time analytics, and generate reports.
+    </p>
+
+    <h2>Tools & Technologies Used</h2>
+    <div class="tools">
+      <div class="tool">HTML</div>
+      <div class="tool">CSS</div>
+      <div class="tool">JavaScript</div>
+      <div class="tool">Chart.js</div>
+      <div class="tool">Leaflet.js</div>
+      <div class="tool">Python</div>
+      <div class="tool">Werkzeug Security</div>
+      <div class="tool">SQLite</div>
+    </div>
+  </div>
+
+  <footer>
+    <p>Back to <a href="{{ url_for('index') }}">Home</a></a> | <a href="{{ url_for('contact') }}">Contact</a></p>
+  </footer>
+
+</body>
+</html>

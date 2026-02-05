@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<head>
+  <title>AI Phishing Detection</title>
+  <style>
+    /*background*/
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #0d1117;
+      color: white;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      overflow: hidden;
+    }
+    /*Glow*/
+    h1 {
+      font-size: 4rem;
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      color: #00ffcc;
+      text-shadow: 
+        0 0 5px #00ffcc,
+        0 0 10px #00ffcc,
+        0 0 20px #00ffcc,
+        0 0 40px #00cc99;
+      animation: popout 2s ease-out forwards, glow 2s infinite alternate;
+      opacity: 0;
+      transform: scale(0.5);
+    }
+    /*Pop-out*/
+    @keyframes popout {
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+    /*effect pulse*/
+    @keyframes glow {
+      from {
+        text-shadow: 
+          0 0 5px #00ffcc,
+          0 0 10px #00ffcc,
+          0 0 20px #00ffcc,
+          0 0 40px #00cc99;
+      }
+      to {
+        text-shadow: 
+          0 0 20px #00ffcc,
+          0 0 40px #00ffcc,
+          0 0 60px #00ffcc,
+          0 0 80px #00cc99;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>CYPHER</h1>
+  <script>
+    setTimeout(() => {
+      window.location.href = "{{ url_for('index') }}";
+    }, 4150);
+  </script>
+</body>
+</html>
