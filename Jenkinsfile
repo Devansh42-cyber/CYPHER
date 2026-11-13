@@ -21,7 +21,7 @@ pipeline {
     }
 
     environment {
-        AWS_REGION   = 'ap-south-1'        // change if your resources are in another region
+        AWS_REGION   = 'us-east-1'        // change if your resources are in another region
         ECR_REPO     = 'cypher'
         APP_DIR      = 'cypher'
         // Fill in after Task 5 to invalidate the CDN cache on every deploy (leave '' to skip)
