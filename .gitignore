@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+venv/
+.venv/
+
+# Secrets & local config — never commit these
+.env
+*.env
+!.env.example
+*.pem
+*.key
+id_rsa*
+*.ppk
+credentials
+.aws/
+
+# Local databases / runtime data
+*.db
+*.sqlite3
+cypher/instance/*.db
+
+# Archives
+*.zip
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
