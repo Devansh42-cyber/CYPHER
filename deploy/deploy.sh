@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Deploy a CYPHER image on this host with health check + automatic rollback.
 #   Usage: deploy.sh <full-image-uri:tag>
-#   e.g.   deploy.sh 123456789012.dkr.ecr.ap-south-1.amazonaws.com/cypher:42-a1b2c3d
+#   e.g.   deploy.sh 123456789012.dkr.ecr.us-east-1.amazonaws.com/cypher:42-a1b2c3d
 # Called by Jenkins after the image has been pushed to ECR.
 set -euo pipefail
 
@@ -10,7 +10,7 @@ NAME="${CONTAINER_NAME:-cypher}"
 HOST_PORT="${HOST_PORT:-80}"
 APP_PORT="${APP_PORT:-5000}"
 APP_ENV="${APP_ENV:-production}"
-AWS_REGION="${AWS_REGION:-ap-south-1}"
+AWS_REGION="${AWS_REGION:-us-east-1}"
 HEALTH_URL="http://127.0.0.1:${HOST_PORT}/health"
 STATE_DIR="${STATE_DIR:-$HOME/.cypher-deploy}"
 VERSION="${IMAGE##*:}"
