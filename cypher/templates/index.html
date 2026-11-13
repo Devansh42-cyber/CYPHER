@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CYPHER Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}?v={{ app_version }}">
+</head>
+
+<body onload="initDashboard()">
+
+<nav class="top-nav">
+    <div class="brand"><h2>CYPHER</h2></div>
+    <ul class="menu">
+        <li><a href="#" onclick="showSection('dashboardSection', this)">Home</a></li>
+        <li><a href="#" onclick="showSection('metricsSection', this)">Model Metrics</a></li>
+        <li><a href="#" onclick="showSection('sandboxSection', this)">Sandboxing</a></li>
+        <li><a href="#" onclick="showSection('settingsSection', this)">Settings</a></li>
+    </ul>
+   </nav>
+
+<div class="content-wrapper">
+
+    <!-- Dashboard Section -->
+    <div id="dashboardSection" style="display:none;">
+
+        <div class="page-header">
+            <h1>Advanced Phishing URL Scanner</h1>
+            <p>Analyze URLs to detect phishing threats and protect your assets.</p>
+        </div>
+
+        <div class="card-layout">
+
+            <div class="card-row">
+                <div class="card">
+                    <h2>Total Scans Today</h2>
+                    <p id="totalScansToday">0</p>
+                </div>
+
+                <div class="card">
+                    <h2>Phishing Detected</h2>
+                    <p id="phishingCount" style="color:#e74c3c;">0</p>
+                </div>
+
+                <div class="card">
+                    <h2>Legitimate Detected</h2>
+                    <p id="legitCount" style="color:#2ecc71;">0</p>
+                </div>
+            </div>
+
+            <div class="card-row">
+
+                <div class="card">
+                    <h2>Check a URL</h2>
+                    <input type="text" id="urlInput" placeholder="Enter URL here"><br>
+                    <input type="button" value="Check" onclick="checkURL()">
+                    <p id="result" style="margin-top:15px;"></p>
+                </div>
+
+                <div class="card" style="max-width: 400px; margin-left: 20px;">
+                    <h2>Today's Scan Summary</h2>
+                    <canvas id="scanChart" width="300" height="250"></canvas>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Metrics Section -->
+    <div id="metricsSection" style="display:none;">
+        <div class="page-header">
+            <h1>Model Performance Metrics</h1>
+            <p>Evaluation results from the phishing detection model (prototype).</p>
+        </div>
+
+        <div class="card-row">
+            <div class="card">
+                <h2>Model Information</h2>
+                <p><strong>Algorithm:</strong> Random Forest (prototype)</p>
+                <p><strong>Feature Count:</strong> 8 features</p>
+                <p><strong>Features Used:</strong></p>
+                <ul>
+                    <li>URL length</li>
+                    <li>Dot count</li>
+                    <li>HTTPS flag</li>
+                    <li>Subdomain length</li>
+                    <li>Domain length</li>
+                    <li>Suffix length</li>
+                    <li>Suspicious keyword flag</li>
+                    <li>Digit presence flag</li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- Sandbox Section -->
+    <div id="sandboxSection" style="display:none;">
+        <div class="page-header">
+            <h1>Sandbox Testing</h1>
+        </div>
+
+        <div class="card" style="max-width:900px; margin: 0 auto;">
+            <h2>About Sandboxing</h2>
+            <p>
+              A sandbox is a safe, isolated environment that lets you open or execute potentially risky
+              content (webpages, files, scripts) without affecting your systems or internal network.
+            </p>
+
+            <h3>When to use a sandbox</h3>
+            <ul>
+              <li>Opening a URL you don't fully trust.</li>
+              <li>Testing website rendering across browsers.</li>
+              <li>Safely investigating suspicious attachments or links.</li>
+            </ul>
+
+            <h3>Important notes</h3>
+            <ul>
+              <li><strong>Privacy:</strong> External sandbox providers may log the target URL.</li>
+              <li><strong>Cost:</strong> Free tiers may have limitations.</li>
+              <li><strong>Scope:</strong> This link opens an external service.</li>
+            </ul>
+
+            <div style="margin-top:14px; display:flex; gap:12px; align-items:center;">
+              <a class="btn" href="https://www.browserling.com/" target="_blank" rel="noopener noreferrer">
+                  Open Browserling (External)
+              </a>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Settings -->
+    <div id="settingsSection" style="display:none;">
+        <div class="page-header">
+            <h1>Settings</h1>
+            <p>Customize your dashboard experience.</p>
+        </div>
+
+        <div class="card" style="max-width: 500px; margin: 0 auto;">
+            <h2>General Preferences</h2>
+            
+            <label>Interface Theme:</label><br>
+            <div style="margin-top:10px; display:flex; gap: 20px;">
+                <label style="display:flex; align-items:center;">
+                    <input type="radio" name="theme" value="dark" checked>
+                    Dark Mode
+                </label>
+                <label style="display:flex; align-items:center;">
+                    <input type="radio" name="theme" value="light">
+                    Light Mode
+                </label>
+            </div>
+            <br>
+
+            <button class="btn" onclick="savePreferences()">Save Preferences</button>
+        </div>
+    </div>
+
+
+</div> <!-- END CONTENT WRAPPER -->
+
+<footer>
+  <hr style="border:0; border-top:1px solid #333; margin:20px 0;">
+  <p>
+    <a href="{{ url_for('about') }}">About</a> |
+    <a href="{{ url_for('contact') }}">Contact</a>
+  </p>
+  <p>&copy; 2025 CYPHER. All rights reserved.</p>
+  <p class="version">Version {{ app_version }} &middot; {{ app_env }}</p>
+</footer>
+
+
+<script>
+const sectionIds = [
+    'dashboardSection',
+    'metricsSection',
+    'sandboxSection',
+    'settingsSection'
+];
+
+function showSection(sectionId, element){
+    sectionIds.forEach(id=>{
+        const sec=document.getElementById(id);
+        if(sec) sec.style.display='none';
+    });
+    const target=document.getElementById(sectionId);
+    if(target) target.style.display='block';
+    document.querySelectorAll('.menu a').forEach(link=>link.classList.remove('active'));
+    element.classList.add('active');
+}
+
+function checkURL() {
+    const url = document.getElementById("urlInput").value.trim();
+    const res = document.getElementById("result");
+
+    if (!url) {
+        res.innerHTML = "Please enter a URL.";
+        res.style.color = "#e74c3c";
+        return;
+    }
+
+    fetch("/check_url_api", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: url })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            res.innerHTML = "Error: " + data.error;
+            res.style.color = "#e74c3c";
+            return;
+        }
+
+        let color = data.prediction === "Phishing" ? "#e74c3c" : "#2ecc71";
+
+        res.innerHTML = `
+            <strong>Result:</strong> <span style="color:${color};">${data.prediction}</span>
+        `;
+    })
+    .catch(err => {
+        res.innerHTML = "Server error!";
+        res.style.color = "#e74c3c";
+    });
+}
+
+function setTheme(theme){
+    const body=document.body;
+    if(theme==='light'){ body.classList.add('light-mode'); localStorage.setItem('theme','light'); }
+    else{ body.classList.remove('light-mode'); localStorage.setItem('theme','dark'); }
+}
+
+function initTheme(){
+    const saved=localStorage.getItem('theme')||'dark';
+    setTheme(saved);
+    const radio=document.querySelector(`input[name="theme"][value="${saved}"]`);
+    if(radio) radio.checked=true;
+    document.querySelectorAll('input[name="theme"]').forEach(r=>r.addEventListener('change',e=>setTheme(e.target.value)));
+}
+
+function savePreferences(){
+    const theme=document.querySelector('input[name="theme"]:checked').value;
+    setTheme(theme);
+    const defaultPage=document.getElementById('defaultView').value;
+    localStorage.setItem('defaultPage',defaultPage);
+    alert('Preferences saved successfully!');
+}
+
+function initDashboard(){
+    initTheme();
+    const savedPage=localStorage.getItem('defaultPage')||'dashboardSection';
+    const defaultSelect=document.getElementById('defaultView');
+    if(defaultSelect) defaultSelect.value=savedPage;
+    const initialLink=document.querySelector(`.menu a[onclick*="'${savedPage}'"]`);
+    const fallbackLink=document.querySelector(`.menu a[onclick*="'dashboardSection'"]`);
+    if(initialLink) showSection(savedPage,initialLink);
+    else showSection('dashboardSection',fallbackLink);
+}
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+let chart;
+
+function updateDashboardStats(data) {
+    document.getElementById("totalScansToday").innerText = data.total;
+    document.getElementById("phishingCount").innerText = data.phishing;
+    document.getElementById("legitCount").innerText = data.legitimate;
+
+    updateScanChart(data);
+}
+
+function updateScanChart(data) {
+    const ctx = document.getElementById("scanChart").getContext("2d");
+
+    if (chart) chart.destroy();
+
+    chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ["Phishing", "Legitimate"],
+            datasets: [{
+                label: "Today’s Scan Count",
+                data: [data.phishing, data.legitimate],
+                backgroundColor: ["#e74c3c", "#2ecc71"]
+            }]
+        },
+        options: { responsive: true }
+    });
+}
+
+// Fetch data from Flask
+function fetchStats() {
+    fetch("/get_dashboard_stats")
+        .then(res => res.json())
+        .then(data => updateDashboardStats(data))
+        .catch(err => console.log("Stats error:", err));
+}
+
+setInterval(fetchStats, 3000);
+fetchStats();
+</script>
+
+</body>
+</html>
