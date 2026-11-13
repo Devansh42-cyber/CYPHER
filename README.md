@@ -101,22 +101,22 @@ The system uses:
 ## Project Structure
 
 ```
-CYPHER
-│
-├── app.py
-├── model/
-│     └── phishing_model.pkl
-├── src/
-│     └── feature_extraction.py
-├── data/
-│     └── urls_dataset.csv
-├── templates/
-│     ├── index.html
-│     ├── Loading.html
-│     ├── About.html
-│     └── Contact.html
-├── static/
-│
+CYPHER/
+├── cypher/                    # Flask application
+│   ├── app.py
+│   ├── src/feature_extraction.py, train_model.py
+│   ├── model/phishing_model.pkl
+│   ├── data/urls_dataset.csv
+│   ├── templates/             # HTML pages
+│   ├── static/css/            # Versioned static assets (cached by CloudFront)
+│   ├── tests/                 # pytest suite run by Jenkins
+│   ├── requirements.txt
+│   └── requirements-dev.txt
+├── deploy/                    # EC2 setup, deploy + rollback scripts, AWS policies
+├── Dockerfile
+├── .dockerignore
+├── Jenkinsfile
+├── DEVOPS.md
 └── README.md
 ```
 
@@ -124,37 +124,46 @@ CYPHER
 
 ## Installation & Setup
 
-### Clone Repository
+### Option A — Docker (recommended)
 ```bash
-git clone https://github.com/yourusername/cypher-phishing-detector.git
-cd cypher-phishing-detector
+git clone https://github.com/Devansh42-cyber/CYPHER.git
+cd CYPHER
+docker build -t cypher .
+docker run -d --name cypher -p 5000:5000 --env-file .env.example cypher
 ```
+Open http://localhost:5000 — health check: http://localhost:5000/health
 
-### Create Virtual Environment
+### Option B — Local Python
 ```bash
+git clone https://github.com/Devansh42-cyber/CYPHER.git
+cd CYPHER/cypher
 python -m venv venv
-venv\Scripts\activate
-```
-
-### Install Dependencies
-```bash
-pip install -r requirements.txt
-```
-
-### Train Model
-```bash
-python src/train_model.py
-```
-
-### Run Application
-```bash
+venv\Scripts\activate          # Windows  (Linux/macOS: source venv/bin/activate)
+pip install -r requirements-dev.txt
 python app.py
 ```
 
-### Open Dashboard
+### Run Tests
+```bash
+cd cypher
+python -m pytest -v
 ```
-http://127.0.0.1:5000
+
+### Retrain the Model (optional)
+```bash
+cd cypher
+python src/train_model.py
 ```
+
+### Configuration (environment variables)
+| Variable | Default | Purpose |
+|---|---|---|
+| `APP_ENV` | `development` | Environment name shown in the footer / health check |
+| `APP_VERSION` | `dev` | Version label; set to the build tag by the pipeline |
+| `PORT` | `5000` | Port the app listens on |
+| `FLASK_DEBUG` | `0` | Set to `1` for Flask debug mode (local only) |
+
+See [DEVOPS.md](DEVOPS.md) for the CI/CD pipeline and AWS deployment.
 
 ---
 
