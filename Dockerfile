@@ -13,7 +13,7 @@ WORKDIR /app
 
 # Install dependencies first so this layer is cached between code changes
 COPY cypher/requirements.txt .
-RUN pip install -r requirements.txt
+RUN pip install --default-timeout=120 --retries 10 -r requirements.txt
 
 # Copy the application (anything listed in .dockerignore is skipped)
 COPY cypher/ .
