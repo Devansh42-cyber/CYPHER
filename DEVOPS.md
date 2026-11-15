@@ -1,6 +1,6 @@
 # CYPHER — DevOps Documentation
 
-> Screenshots go in `docs/screenshots/`. Replace each `TODO` marker with your own image/values before submitting.
+> All screenshots are in [`docs/screenshots/`](docs/screenshots/). Sensitive values (AWS account ID) are redacted.
 
 ## 1. Project Overview & Technology Stack
 
@@ -18,7 +18,14 @@
 | CDN / HTTPS | AWS CloudFront (`https://dxxxxxxxx.cloudfront.net`) |
 | Access control | IAM instance role (no access keys stored), Jenkins credentials store |
 
-**Live URL:** `TODO: https://dxxxxxxxxxxxx.cloudfront.net`
+**Live application (EC2):** http://54.152.241.119/index (Elastic IP)  
+**CloudFront URL:** pending AWS account verification — see [Section 7](#7-cloudfront-configuration)
+
+| Item | Value |
+|---|---|
+| Repository | https://github.com/Devansh42-cyber/CYPHER |
+| AWS region | us-east-1 (N. Virginia) |
+| Jenkins | http://54.152.241.119:8080 (job `cypher-pipeline`) |
 
 ## 2. DevOps Architecture
 
@@ -39,8 +46,6 @@ flowchart LR
     IAM[IAM role] -.->|ECR + CloudFront permissions| EC2
 ```
 
-`TODO: also export this as an image (e.g. draw.io) into docs/screenshots/architecture.png if your evaluator can't render Mermaid.`
-
 ## 3. Git Repository Structure & Workflow
 
 ```
@@ -56,7 +61,29 @@ CYPHER/
 - **Flow:** `feature/x` → PR into `develop` → PR `develop` → `main` → webhook → pipeline → deploy.
 - **Secrets:** `.gitignore` blocks `.env`, keys (`*.pem`, `*.key`, `id_rsa*`), AWS credentials and local databases. A local SQLite file (`instance/app.db`) and `__pycache__` were removed from tracking. Runtime configuration comes from environment variables (see `.env.example`).
 
-`TODO screenshots: repo home, branches page, a merged pull request, commit history`
+![Pushing the feature branch and creating the develop branch](docs/screenshots/01-git-push.png)
+*Figure: Pushing the feature branch and creating the develop branch*
+
+![Opening a pull request from feature/devops-setup into develop](docs/screenshots/02-pr-create.png)
+*Figure: Opening a pull request from feature/devops-setup into develop*
+
+![PR #1 merged into develop](docs/screenshots/03-pr1-merged.png)
+*Figure: PR #1 merged into develop*
+
+![PR #2 merged from develop into main](docs/screenshots/04-pr2-merged.png)
+*Figure: PR #2 merged from develop into main*
+
+![Branches: main, develop and feature branches](docs/screenshots/05-branches.png)
+*Figure: Branches: main, develop and feature branches*
+
+![Commit history with merge commits](docs/screenshots/06-commits.png)
+*Figure: Commit history with merge commits*
+
+![Repository with Dockerfile, Jenkinsfile, DEVOPS.md and .gitignore](docs/screenshots/07-repo-home.png)
+*Figure: Repository with Dockerfile, Jenkinsfile, DEVOPS.md and .gitignore*
+
+![PR #3: region change from a feature branch into develop](docs/screenshots/08-pr3-region.png)
+*Figure: PR #3: region change from a feature branch into develop*
 
 ## 4. Docker
 
@@ -75,7 +102,20 @@ curl http://localhost:5000/health
 docker ps            # STATUS shows (healthy)
 ```
 
-`TODO screenshots: docker build output, docker images, docker ps (healthy), app in browser at localhost:5000`
+![docker build completed successfully (local machine)](docs/screenshots/09-docker-build.png)
+*Figure: docker build completed successfully (local machine)*
+
+![docker images showing cypher:latest](docs/screenshots/10-docker-images.png)
+*Figure: docker images showing cypher:latest*
+
+![Container running and reported healthy](docs/screenshots/11-docker-ps.png)
+*Figure: Container running and reported healthy*
+
+![Application running locally through Docker (localhost:5000)](docs/screenshots/12-docker-app.png)
+*Figure: Application running locally through Docker (localhost:5000)*
+
+![Health endpoint showing configuration passed via environment variables](docs/screenshots/13-docker-health.png)
+*Figure: Health endpoint showing configuration passed via environment variables*
 
 ## 5. Jenkins Pipeline
 
@@ -94,20 +134,64 @@ Job type: **Pipeline from SCM**, branch `*/main`, trigger **GitHub hook trigger 
 
 **Credentials:** AWS access uses the EC2 **IAM role** (`deploy/aws/iam-policy.json`) — no access keys exist in Jenkins or Git. The AWS account ID is stored as a Jenkins *Secret text* credential (`aws-account-id`).
 
-`TODO screenshots: pipeline stage view (all green), console output, test results, webhook delivery (GitHub → Settings → Webhooks → Recent deliveries), credentials page (values hidden)`
+![Jenkins credential aws-account-id (value hidden)](docs/screenshots/20-jenkins-credentials.png)
+*Figure: Jenkins credential aws-account-id (value hidden)*
+
+![GitHub hook trigger enabled](docs/screenshots/21-jenkins-trigger.png)
+*Figure: GitHub hook trigger enabled*
+
+![Pipeline script from SCM: GitHub repository](docs/screenshots/22-jenkins-scm.png)
+*Figure: Pipeline script from SCM: GitHub repository*
+
+![Branch */main and Jenkinsfile script path](docs/screenshots/23-jenkins-branch.png)
+*Figure: Branch */main and Jenkinsfile script path*
+
+![GitHub webhook delivered to Jenkins (HTTP 200)](docs/screenshots/24-webhook.png)
+*Figure: GitHub webhook delivered to Jenkins (HTTP 200)*
+
+![First successful pipeline run (build #1)](docs/screenshots/25-stage-view-first.png)
+*Figure: First successful pipeline run (build #1)*
 
 ## 6. AWS Infrastructure
 
 | Resource | Configuration |
 |---|---|
-| EC2 | `TODO type (t3.small/medium)`, Ubuntu 24.04, region `ap-south-1`, 2 GB swap |
+| EC2 | t3.small, Ubuntu 24.04, region `us-east-1`, Elastic IP `54.152.241.119`, 20 GB gp3, 2 GB swap |
 | Security group | 22 (SSH, my IP only), 80 (HTTP, app/CloudFront origin), 8080 (Jenkins + GitHub webhook) |
 | IAM role | `cypher-ec2-role` with `deploy/aws/iam-policy.json` (ECR push/pull for `cypher`, CloudFront invalidation) |
 | ECR | Repository `cypher`, scan on push, lifecycle policy `deploy/aws/ecr-lifecycle-policy.json` |
 | Restart on reboot | Docker service enabled at boot + container `--restart unless-stopped` |
 | Health check | `GET /health` → `{"status":"ok","model_loaded":true,"version":...}`; Docker HEALTHCHECK + deploy script check |
 
-`TODO screenshots: EC2 instance details, security group rules, IAM role, ECR repository with image tags (redact account ID)`
+![IAM policy cypher-ec2-policy created](docs/screenshots/14-iam-policy.png)
+*Figure: IAM policy cypher-ec2-policy created*
+
+![IAM role cypher-ec2-role created](docs/screenshots/15-iam-role-created.png)
+*Figure: IAM role cypher-ec2-role created*
+
+![Role with policy attached (account ID redacted)](docs/screenshots/16-iam-role.png)
+*Figure: Role with policy attached (account ID redacted)*
+
+![ECR repository cypher with lifecycle rule (keep last 10 images)](docs/screenshots/17-ecr-lifecycle.png)
+*Figure: ECR repository cypher with lifecycle rule (keep last 10 images)*
+
+![EC2 instance cypher-server: t3.small, running, IAM role attached (before the Elastic IP was associated)](docs/screenshots/18-ec2-instance.png)
+*Figure: EC2 instance cypher-server: t3.small, running, IAM role attached (before the Elastic IP was associated)*
+
+![Instance networking: public IP and DNS](docs/screenshots/19-ec2-dns.png)
+*Figure: Instance networking: public IP and DNS*
+
+![First image pushed to ECR by Jenkins](docs/screenshots/26-ecr-first-image.png)
+*Figure: First image pushed to ECR by Jenkins*
+
+![Application deployed on EC2 and serving requests](docs/screenshots/27-app-ec2.png)
+*Figure: Application deployed on EC2 and serving requests*
+
+![Health check endpoint on EC2](docs/screenshots/28-health-ec2.png)
+*Figure: Health check endpoint on EC2*
+
+![After an EC2 reboot the container came back up automatically and healthy](docs/screenshots/29-reboot-docker-ps.png)
+*Figure: After an EC2 reboot the container came back up automatically and healthy*
 
 ## 7. CloudFront Configuration
 
@@ -125,7 +209,13 @@ Job type: **Pipeline from SCM**, branch `*/main`, trigger **GitHub hook trigger 
 
 > Production note: for end-to-end encryption, put the origin behind a domain with a TLS certificate (e.g. an ALB with ACM, or Nginx + Let's Encrypt on EC2) and set the origin protocol to HTTPS only.
 
-`TODO screenshots: distribution general settings, origin, behaviors list, an invalidation, the app over https://...cloudfront.net`
+**Status:** CloudFront distribution creation is blocked by AWS for this (new) account until AWS Support verifies it. A support case (#179474811500199) was raised on 15 Nov 2026. The configuration above is ready to apply as soon as the account is verified; the Jenkinsfile already contains the invalidation stage (enabled by setting `CLOUDFRONT_DISTRIBUTION_ID`).
+
+![AWS error when creating the distribution: account verification required](docs/screenshots/30-cloudfront-error.png)
+*Figure: AWS error when creating the distribution: account verification required*
+
+![AWS Support case #179474811500199 raised](docs/screenshots/31-support-case.png)
+*Figure: AWS Support case #179474811500199 raised*
 
 ## 8. Deployment & Rollback Procedure
 
@@ -143,7 +233,35 @@ Alternatively, revert the commit on `main` and push — the pipeline redeploys t
 
 ## 9. End-to-End Demonstration
 
-`TODO: describe the change you made (e.g. footer text / heading colour), with before/after screenshots, the triggered build number, the new image tag in ECR, and the CloudFront page showing the new version in the footer.`
+**Change made:** dashboard heading changed from *"Advanced Phishing URL Scanner"* to *"CYPHER v2 – AI Phishing URL Scanner"* (plus a Dockerfile fix), on branch `feature/ui-update`.
+
+| Step | Evidence |
+|---|---|
+| 1–3. Change committed, PR into `develop`, then PR #7 into `main` | PR #7 |
+| 4. GitHub webhook triggered Jenkins automatically | Build #3 "Started by GitHub push" |
+| 5. Tests ran and a new Docker image was built | Build #3 stage view |
+| 6. Image pushed to ECR | Tag `3-5e0ba51` |
+| 7. Redeployed to EC2 automatically | Footer shows `Version 3-5e0ba51 · production` |
+
+No files were built or copied to the server manually.
+
+![Before: original heading, version 1-e924e89](docs/screenshots/32-before.png)
+*Figure: Before: original heading, version 1-e924e89*
+
+![PR #7 merged into main (heading change + Dockerfile fix)](docs/screenshots/33-pr7-merged.png)
+*Figure: PR #7 merged into main (heading change + Dockerfile fix)*
+
+![Build #3 triggered automatically by the push, all stages green](docs/screenshots/34-build3-green.png)
+*Figure: Build #3 triggered automatically by the push, all stages green*
+
+![New image 3-5e0ba51 pushed to ECR](docs/screenshots/35-ecr-new-tag.png)
+*Figure: New image 3-5e0ba51 pushed to ECR*
+
+![After: new heading live on EC2](docs/screenshots/36-after.png)
+*Figure: After: new heading live on EC2*
+
+![Footer shows the new version 3-5e0ba51](docs/screenshots/37-after-version.png)
+*Figure: Footer shows the new version 3-5e0ba51*
 
 ## 10. Challenges & Solutions
 
@@ -156,4 +274,11 @@ Alternatively, revert the commit on `main` and push — the pipeline redeploys t
 | Jenkins + Docker builds exhaust memory on small instances | 2 GB swap file + t3.small or larger |
 | Dashboard stats are kept in memory | Gunicorn runs 1 worker with 4 threads so the counts stay consistent |
 | CSS cached by CloudFront after a deploy | Versioned asset URLs (`?v=`) + query string in cache key + invalidation |
-| `TODO: add the real problems you hit` | |
+| New AWS account could only launch EC2 in 3 regions (Mumbai locked) | Moved all resources to us-east-1 and updated the region in the Jenkinsfile and deploy script via a pull request |
+| CloudFront blocked: "account must be verified" | Raised AWS Support case #179474811500199; CloudFront configuration documented and ready to apply |
+| SSH timed out from a mobile hotspot (IP kept changing, so the "My IP" rule no longer matched) | Allowed SSH from anywhere; access still requires the private key |
+| Public IP would change on every stop/start, breaking the webhook | Allocated an Elastic IP (54.152.241.119) |
+| `pip install` timed out inside `docker build` on a slow network | Added `--default-timeout=120 --retries 10` to the Dockerfile |
+| Docker CLI error "cannot find dockerDesktopLinuxEngine" | Docker Desktop engine was not running; started it |
+| Windows changed the executable bit on shell scripts, causing git conflicts | Set `git config core.filemode false`; scripts are invoked with `bash` |
+| A build was aborted when the instance was stopped mid-build | Rebuilt; pipeline is idempotent and uses unique image tags |
