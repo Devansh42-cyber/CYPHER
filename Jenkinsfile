@@ -25,7 +25,7 @@ pipeline {
         ECR_REPO     = 'cypher'
         APP_DIR      = 'cypher'
         // Fill in after Task 5 to invalidate the CDN cache on every deploy (leave '' to skip)
-        CLOUDFRONT_DISTRIBUTION_ID = ''
+        CLOUDFRONT_DISTRIBUTION_ID = 'd22pmi644rwnli'
     }
 
     stages {
